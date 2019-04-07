@@ -2,39 +2,19 @@
   <div class="content">
     <button class="add-to-cart" v-on:click="addToCart()">Add to Cart</button>
     <div class="top-row">
-      <div v-bind:class="[saleBorderClass, 'top', 'part']">
-        <div class="robot-name">
-          {{selectedRobot.head.title}}
-          <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
-        </div>
-        <img v-bind:src="selectedRobot.head.src" title="head">
-        <button v-on:click="selectPreviosHead()" class="prev-selector">&#9668;</button>
-        <button v-on:click="selectNextHead()" class="next-selector">&#9658;</button>
-      </div>
+      <!-- <div class="robot-name">
+        {{selectedRobot.head.title}}
+        <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
+      </div> -->
+      <PartSelector/>
     </div>
     <div class="middle-row">
-      <div class="left part">
-        <img v-bind:src="selectedRobot.leftArm.src" title="left arm">
-        <button v-on:click="selectPreviosLeftArm()" class="prev-selector">&#9650;</button>
-        <button v-on:click="selectNextLeftArm()" class="next-selector">&#9660;</button>
-      </div>
-      <div class="center part">
-        <img v-bind:src="selectedRobot.torso.src" title="left arm">
-        <button v-on:click="selectPreviosTorso()" class="prev-selector">&#9668;</button>
-        <button v-on:click="selectNextTorso()" class="next-selector">&#9658;</button>
-      </div>
-      <div class="right part">
-        <img v-bind:src="selectedRobot.rightArm.src" title="left arm">
-        <button v-on:click="selectPreviosRightArm()" class="prev-selector">&#9650;</button>
-        <button v-on:click="selectNextRightArm()" class="next-selector">&#9660;</button>
-      </div>
+      <PartSelector/>
+      <PartSelector/>
+      <PartSelector/>
     </div>
     <div class="bottom-row">
-      <div class="bottom part">
-        <img v-bind:src="selectedRobot.base.src" title="left arm">
-        <button v-on:click="selectPreviosBase()" class="prev-selector">&#9668;</button>
-        <button v-on:click="selectNextBase()" class="next-selector">&#9658;</button>
-      </div>
+      <PartSelector/>
     </div>
     <div>
       <h1>Cart</h1>
@@ -61,32 +41,24 @@
 <script>
 import availableParts from "../data/parts";
 import createdHookMixin from "./created-hook-mixin";
-
-function getPreviousValidIndex(index, length) {
-  const deprecatedIndex = index - 1;
-  return deprecatedIndex < 0 ? length - 1 : deprecatedIndex;
-}
-
-function getNextValidIndex(index, length) {
-  const incrementedIndex = index + 1;
-  return incrementedIndex > length - 1 ? 0 : incrementedIndex;
-}
+// импортировали из компонента
+import PartSelector from "./PartSelector.vue";
 
 export default {
   name: "RobotBuilder",
-  // Хуки жизненного цикла экземпляра
-  // created() {
-  //   console.log("component created");
-  // },
+  // указали компонент для использования
+  components: { PartSelector },
   data() {
     return {
       availableParts,
       cart: [],
-      selectedHeadIndex: 0,
-      selectedLeftArmIndex: 0,
-      selectedTorsoIndex: 0,
-      selectedRightArmIndex: 0,
-      selectedBaseIndex: 0
+      selectedRobot: {
+        head: {},
+        leftArm: {},
+        torso: {},
+        rightArm: {},
+        base: {}
+      }
     };
   },
   // use mixins
@@ -97,25 +69,17 @@ export default {
     },
     headBorderStyle() {
       return {
-        border: this.selectedRobot.head.onSale ? 
-        "3px solid red" :
-        "3px solid #aaa",
-      };
-    },
-    selectedRobot() {
-      return {
-        head: availableParts.heads[this.selectedHeadIndex],
-        leftArm: availableParts.arms[this.selectedLeftArmIndex],
-        torso: availableParts.torsos[this.selectedTorsoIndex],
-        rightArm: availableParts.arms[this.selectedRightArmIndex],
-        base: availableParts.bases[this.selectedBaseIndex]
+        border: this.selectedRobot.head.onSale
+          ? "3px solid red"
+          : "3px solid #aaa"
       };
     }
   },
   methods: {
     addToCart() {
       const robot = this.selectedRobot;
-      const cost = robot.head.cost +
+      const cost =
+        robot.head.cost +
         robot.leftArm.cost +
         robot.torso.cost +
         robot.rightArm.cost +
@@ -123,67 +87,6 @@ export default {
       // копируем объект со всеми сво-ми в массив cart. good practice
       // https://ru.vuejs.org/v2/guide/reactivity.html
       this.cart.push(Object.assign({}, robot, { cost }));
-    },
-    selectPreviosHead() {
-      this.selectedHeadIndex = getPreviousValidIndex(
-        this.selectedHeadIndex,
-        availableParts.heads.length
-      );
-    },
-    selectNextHead() {
-      this.selectedHeadIndex = getNextValidIndex(
-        this.selectedHeadIndex,
-        availableParts.heads.length
-      );
-    },
-
-    selectPreviosLeftArm() {
-      this.selectedLeftArmIndex = getPreviousValidIndex(
-        this.selectedLeftArmIndex,
-        availableParts.arms.length
-      );
-    },
-    selectNextLeftArm() {
-      this.selectedLeftArmIndex = getNextValidIndex(
-        this.selectedLeftArmIndex,
-        availableParts.arms.length
-      );
-    },
-    selectPreviosTorso() {
-      this.selectedTorsoIndex = getPreviousValidIndex(
-        this.selectedTorsoIndex,
-        availableParts.torsos.length
-      );
-    },
-    selectNextTorso() {
-      this.selectedTorsoIndex = getNextValidIndex(
-        this.selectedTorsoIndex,
-        availableParts.torsos.length
-      );
-    },
-    selectPreviosRightArm() {
-      this.selectedRightArmIndex = getPreviousValidIndex(
-        this.selectedRightArmIndex,
-        availableParts.arms.length
-      );
-    },
-    selectNextRightArm() {
-      this.selectedRightArmIndex = getNextValidIndex(
-        this.selectedRightArmIndex,
-        availableParts.arms.length
-      );
-    },
-    selectPreviosBase() {
-      this.selectedBaseIndex = getPreviousValidIndex(
-        this.selectedBaseIndex,
-        availableParts.bases.length
-      );
-    },
-    selectNextBase() {
-      this.selectedBaseIndex = getNextValidIndex(
-        this.selectedBaseIndex,
-        availableParts.bases.length
-      );
     }
   }
 };
@@ -199,7 +102,7 @@ export default {
   border: 3px solid #aaa;
 }
 .part {
-    img {
+  img {
     width: 165px;
   }
 }
@@ -302,7 +205,8 @@ export default {
   padding: 3px;
   font-size: 16px;
 }
-td, th {
+td,
+th {
   text-align: left;
   padding: 5px;
   padding-right: 20px;
