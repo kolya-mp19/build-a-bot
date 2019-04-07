@@ -28,6 +28,14 @@ export default {
 };
 </script>
 
+
+<!-- эти стили применимы только к текущему template и к дочерним (к обертке дочернего напрямую (content) или применять селектор >>> (.content >>> .robot-name) или селектор /deep/), 
+но к дочерним элементам применяются не все стили (к примеру border не применим)  -->
+<style scoped>
+
+</style>
+
+<!-- эти глобальные стили -->
 <style>
 body {
   background: linear-gradient(to bottom, #555, #999);
