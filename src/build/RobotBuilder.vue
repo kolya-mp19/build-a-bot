@@ -2,7 +2,7 @@
   <div class="content">
     <button class="add-to-cart" v-on:click="addToCart()">Add to Cart</button>
     <div class="top-row">
-      <div class="top part" v-bind:style="headBorderStyle">
+      <div v-bind:class="[saleBorderClass, 'top', 'part']">
         <div class="robot-name">
           {{selectedRobot.head.title}}
           <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
@@ -85,6 +85,9 @@ export default {
     };
   },
   computed: {
+    saleBorderClass() {
+      return this.selectedRobot.head.onSale ? "sale-border" : "";
+    },
     headBorderStyle() {
       return {
         border: this.selectedRobot.head.onSale ? 
@@ -179,15 +182,19 @@ export default {
 };
 </script>
 
-<style>
+<!-- npm install node-sass sass-loader --save-dev -->
+<!-- lang="scss" -все что нужно для использования scss -->
+<style lang="scss">
 .part {
   position: relative;
   width: 165px;
   height: 165px;
   border: 3px solid #aaa;
 }
-.part img {
-  width: 165px;
+.part {
+    img {
+    width: 165px;
+  }
 }
 .top-row {
   display: flex;
@@ -295,5 +302,8 @@ td, th {
 }
 .cost {
   text-align: right;
+}
+.sale-border {
+  border: 3px solid red;
 }
 </style>
