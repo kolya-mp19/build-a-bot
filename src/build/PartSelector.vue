@@ -1,5 +1,5 @@
 <template>
-  <div class="part">
+  <div class="part"  v-bind:class="position">
     <img :src="selectedPart.src" title="arm"/>
     <button @click="selectPreviousPart()" class="prev-selector"></button>
     <button @click="selectNextPart()" class="next-selector"></button>
@@ -8,9 +8,6 @@
 </template>
 
 <script>
-import availableParts from '../data/parts';
-
-const parts = availableParts.heads;
 
 function getPreviousValidIndex(index, length) {
   const deprecatedIndex = index - 1;
@@ -23,25 +20,50 @@ function getNextValidIndex(index, length) {
 }
 
 export default {
+  // все свойства которые мы используем вне элемента - должны экспортировать
+  // в т.ч. позиционирование, которое задается относительно другого компонента
+  props: {
+    parts: {
+      type: Array,
+      required: true,
+    },
+    position: {
+      type: String,
+      required: true,
+      validator(value) {
+        return ["left", "right", "top", "bottom", "center"].includes(value);
+      },
+    },
+  },
   data() {
     return { selectedPartIndex: 0 };
   },
   computed: {
     selectedPart() {
-      return parts[this.selectedPartIndex];
+      return this.parts[this.selectedPartIndex];
     },
   },
+    created() {
+    this.emitSelectedPart();
+  },
+  updated() {
+    this.emitSelectedPart();
+  },
   methods: {
+    emitSelectedPart() {
+      // генерируем событие
+      this.$emit("partSelected", this.selectedPart);
+    },
     selectNextPart() {
       this.selectedPartIndex = getNextValidIndex(
         this.selectedPartIndex,
-        parts.length,
+        this.parts.length,
       );
     },
     selectPreviousPart() {
       this.selectedPartIndex = getPreviousValidIndex(
         this.selectedPartIndex,
-        parts.length,
+        this.parts.length,
       );
     },
 

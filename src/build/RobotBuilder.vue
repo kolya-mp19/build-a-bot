@@ -1,20 +1,60 @@
 <template>
   <div class="content">
-    <button class="add-to-cart" v-on:click="addToCart()">Add to Cart</button>
+    <div class="preview">
+      <CollapsibleSection>
+      <!-- контент тут заменяет в slot в компоненте -->
+      </CollapsibleSection>
+      <CollapsibleSection>
+      <div class="preview-content">
+        <div class="top-row">
+          <img :src="selectedRobot.head.src">
+        </div>
+        <div class="middle-row">
+          <img :src="selectedRobot.leftArm.src" class="rotate-left">
+          <img :src="selectedRobot.torso.src">
+          <img :src="selectedRobot.rightArm.src" class="rotate-right">
+        </div>
+        <div class="bottom-row">
+          <img :src="selectedRobot.base.src">
+        </div>
+      </div>
+      </CollapsibleSection>
+      <button class="add-to-cart" v-on:click="addToCart()">Add to Cart</button>
+    </div>
     <div class="top-row">
       <!-- <div class="robot-name">
         {{selectedRobot.head.title}}
         <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
-      </div> -->
-      <PartSelector/>
+      </div>-->
+      <PartSelector
+        v-bind:parts="availableParts.heads"
+        position="top"
+        v-on:partSelected="part => selectedRobot.head=part"
+      />
     </div>
     <div class="middle-row">
-      <PartSelector/>
-      <PartSelector/>
-      <PartSelector/>
+      <PartSelector
+        v-bind:parts="availableParts.arms"
+        position="left"
+        v-on:partSelected="part => selectedRobot.leftArm=part"
+      />
+      <PartSelector
+        v-bind:parts="availableParts.torsos"
+        position="center"
+        v-on:partSelected="part => selectedRobot.torso=part"
+      />
+      <PartSelector
+        v-bind:parts="availableParts.arms"
+        position="right"
+        v-on:partSelected="part => selectedRobot.rightArm=part"
+      />
     </div>
     <div class="bottom-row">
-      <PartSelector/>
+      <PartSelector
+        v-bind:parts="availableParts.bases"
+        position="bottom"
+        v-on:partSelected="part => selectedRobot.base=part"
+      />
     </div>
     <div>
       <h1>Cart</h1>
@@ -43,11 +83,12 @@ import availableParts from "../data/parts";
 import createdHookMixin from "./created-hook-mixin";
 // импортировали из компонента
 import PartSelector from "./PartSelector.vue";
+import CollapsibleSection from "./shared/CollapsibleSection.vue";
 
 export default {
   name: "RobotBuilder",
   // указали компонент для использования
-  components: { PartSelector },
+  components: { PartSelector, CollapsibleSection },
   data() {
     return {
       availableParts,
@@ -200,8 +241,7 @@ export default {
 }
 .add-to-cart {
   position: absolute;
-  right: 30px;
-  width: 220px;
+  width: 210px;
   padding: 3px;
   font-size: 16px;
 }
@@ -216,5 +256,26 @@ th {
 }
 .sale-border {
   border: 3px solid red;
+}
+.preview {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  width: 210px;
+  height: 210px;
+  padding: 5px;
+}
+.preview-content {
+  border: 1px solid #999;
+}
+.preview img {
+  width: 50px;
+  height: 50px;
+}
+.rotate-right {
+  transform: rotate(90deg);
+}
+.rotate-left {
+  transform: rotate(-90deg);
 }
 </style>
