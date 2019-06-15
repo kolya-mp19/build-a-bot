@@ -87,11 +87,20 @@ import CollapsibleSection from "./shared/CollapsibleSection.vue";
 
 export default {
   name: "RobotBuilder",
+  beforeRouteLeave(to, from, next) {
+    if (this.addedToCart) {
+      next(true);
+    } else {
+      const response = confirm('You have not added your robot to your cart, are you sure want to leave?');
+      next(response);
+    }
+  },
   // указали компонент для использования
   components: { PartSelector, CollapsibleSection },
   data() {
     return {
       availableParts,
+      addedToCart: false,
       cart: [],
       selectedRobot: {
         head: {},
@@ -128,6 +137,7 @@ export default {
       // копируем объект со всеми сво-ми в массив cart. good practice
       // https://ru.vuejs.org/v2/guide/reactivity.html
       this.cart.push(Object.assign({}, robot, { cost }));
+      this.addedToCart = true;
     }
   }
 };
