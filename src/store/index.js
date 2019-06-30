@@ -1,20 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import robotsModule from './modules/robots';
+import usersModule from './modules/users';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    cart: [],
+    // корневое состояние
+    foo: 'root-foo',
   },
-  mutations: {
-    addRobotToCart(state, robot) {
-      state.cart.push(robot);
-    },
+  modules: {
+    robots: robotsModule,
+    users: usersModule,
   },
   getters: {
-    cartSaleItems(state) {
-      return state.cart.filter(item => item.head.onSale);
-    },
   },
 });
