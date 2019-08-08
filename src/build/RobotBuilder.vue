@@ -2,9 +2,6 @@
   <div v-if="availableParts" class="content">
     <div class="preview">
       <CollapsibleSection>
-      <!-- контент тут заменяет в slot в компоненте -->
-      </CollapsibleSection>
-      <CollapsibleSection>
       <div class="preview-content">
         <div class="top-row">
           <img :src="selectedRobot.head.src">
