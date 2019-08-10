@@ -1,0 +1,3 @@
+[submodule "build-a-bot-server"]
+	path = build-a-bot-server
+	url = git://github.com/kolya-mp19/build-a-bot-server.git
