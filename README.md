@@ -6,27 +6,15 @@ Create a robot.
 ## Project setup
 ```
 npm install
+
+Установить подмодуль:
+git submodule init
+git submodule update --init --recursive
+
+Перейти в папку build-a-bot-server:
+npm install
+
+Запустить сервер:
+npm start
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
